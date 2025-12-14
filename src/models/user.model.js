@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     index: true,
     lowercase: true,
   },
-  email:{
+  email: {
     type: String,
     required: true,
     unique: true,
@@ -27,19 +27,19 @@ const userSchema = new mongoose.Schema({
     index: true,
   },
   avator: {
-    type: String,        // cloudinary image public_id or URL
+    type: String, // cloudinary image public_id or URL
     required: true,
     default: "default-avatar.png",
   },
   coverimage: {
-    type: String,        // cloudinary image public_id or URL
-    required: true,    
+    type: String, // cloudinary image public_id or URL
+    required: true,
     default: "default-cover.jpg",
   },
   watchHistory: [
     {
       type: Schema.Types.ObjectId,
-        ref: "Video",
+      ref: "Video",
     },
   ],
   password: {
@@ -73,23 +73,22 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
-
 
 userSchema.methods.isPasswordCorrect = async function (Password) {
   return await bcrypt.compare(Password, this.password);
 };
 
-
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
-    { _id: this._id,
-        username: this.username,
-        fullname: this.fullname,
-        email: this.email,
+    {
+      _id: this._id,
+      username: this.username,
+      fullname: this.fullname,
+      email: this.email,
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
@@ -97,10 +96,8 @@ userSchema.methods.generateAccessToken = function () {
 };
 
 userSchema.methods.generateRefreshToken = function () {
-  return jwt.sign(
-    { userId: this._id},
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
-  );
+  return jwt.sign({ userId: this._id }, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+  });
 };
 export const User = mongoose.model("User", userSchema);
