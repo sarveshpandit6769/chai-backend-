@@ -1,7 +1,7 @@
 import { time } from "console";
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -26,19 +26,17 @@ const userSchema = new mongoose.Schema({
     trim: true,
     index: true,
   },
-  avator: {
+  avatar: {
     type: String, // cloudinary image public_id or URL
-    required: true,
-    default: "default-avatar.png",
+    required: true
   },
   coverimage: {
     type: String, // cloudinary image public_id or URL
     required: true,
-    default: "default-cover.jpg",
   },
   watchHistory: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Video",
     },
   ],
@@ -46,7 +44,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password is required"],
     minlength: 6,
-    select: false, // Do not return password field by default
   },
   refreshTokens: [
     {
