@@ -1,4 +1,3 @@
-import { time } from "console";
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -8,7 +7,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true,
     index: true,
     lowercase: true,
   },
@@ -16,27 +14,25 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true,
     lowercase: true,
     match: [/.+@.+\..+/, "Please enter a valid email address"],
   },
   fullname: {
     type: String,
     required: true,
-    trim: true,
     index: true,
   },
   avatar: {
-    type: String, // cloudinary image public_id or URL
-    required: true
-  },
-  coverimage: {
-    type: String, // cloudinary image public_id or URL
+    type: String,
     required: true,
+  },
+  coverImage: {
+    type: String,
+    required: false,
   },
   watchHistory: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Video",
     },
   ],
@@ -61,18 +57,17 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre("save", function (next) {
+userSchema.pre("save",  async function () {
   this.updatedAt = Date.now();
-  next();
 });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    return next();
+    return;
   }
+  
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 userSchema.methods.isPasswordCorrect = async function (Password) {
