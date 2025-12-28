@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "Password is required"],
     minlength: 6,
   },
-  refreshTokens: [
+  refreshToken: [
     {
       type: String,
     },
@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre("save",  async function () {
+userSchema.pre("save", async function () {
   this.updatedAt = Date.now();
 });
 
@@ -65,7 +65,7 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return;
   }
-  
+
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
