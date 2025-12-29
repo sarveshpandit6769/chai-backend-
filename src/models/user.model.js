@@ -41,12 +41,9 @@ const userSchema = new mongoose.Schema({
     required: [true, "Password is required"],
     minlength: 6,
   },
-  refreshToken: [
-    {
-      type: String,
-    },
-    { timestamps: true },
-  ],
+  refreshToken: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
