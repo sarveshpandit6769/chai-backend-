@@ -269,6 +269,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Avatar file is missing");
   }
 
+  //TODO: delete  old image - assignment
   const avatar = await uploadOnCloudinary(avatarLocalPath);
 
   if (!avatar.url) {
@@ -313,7 +314,9 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   ).select("-password");
   return res
     .status(200)
-    .json(new ApiResponse(200, coverImage.url, "Cover image updated successfully"));
+    .json(
+      new ApiResponse(200, coverImage.url, "Cover image updated successfully")
+    );
 });
 
 export {
