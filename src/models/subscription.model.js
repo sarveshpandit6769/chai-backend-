@@ -14,15 +14,6 @@ const subscriptionSchema = new Schema(
       type: Date,
       default: Date.now,
     },
-    endDate: {
-      type: Date,
-      default: null,
-    },
-    status: {
-      type: String,
-      enum: ["active", "inactive", "expired"],
-      default: "active",
-    },
   },
   { timestamps: true }
 );
